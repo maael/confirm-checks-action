@@ -1,0 +1,18 @@
+name: 'Confirm Checks'
+description: 'Confirms that certain checks have passed for a commit'
+author: 'Matthew Elphick'
+inputs:
+  github_token:
+    required: true
+    description: 'GitHub token'
+  commit:
+    description: 'The commit sha to use as the HEAD, defaults to the current sha'
+  repo:
+    description: 'The repo in form OWNER/NAME to use, defaults to current'
+  checks:
+    description: 'The checks to confirm, separated by a comma'
+    required: true
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

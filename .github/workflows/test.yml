@@ -1,0 +1,42 @@
+name: 'build-test'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          yarn install
+      - run: |
+          yarn all
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          github_token: ${{env.GITHUB_PAT_TOKEN}}
+          commit: '25e6c46a48a3052c27b8f35e2e3cd513193ce9a8'
+          repo: 'ThreadsStyling/web-app-next-template'
+          checks: 'Deploy Staging,CI Checks'
+  local:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ACT Checkout
+        uses: actions/checkout@v2
+        if: ${{env.ACT}}
+        with:
+          path: ./confirm-checks-action
+      - uses: ./
+        if: ${{env.ACT}}
+        with:
+          github_token: ${{env.GITHUB_PAT_TOKEN}}
+          commit: '25e6c46a48a3052c27b8f35e2e3cd513193ce9a8'
+          repo: 'ThreadsStyling/web-app-next-template'
+          checks: 'Deploy Staging,CI Checks'
