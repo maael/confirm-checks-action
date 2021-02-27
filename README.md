@@ -2,7 +2,7 @@
   <a href="https://github.com/maael/confirm-checks-action/actions"><img alt="confirm-checks-action status" src="https://github.com/maael/confirm-checks-action/workflows/build-test/badge.svg"></a>
 </p>
 
-# slack-deploy-message-action
+# confirm-checks-action
 
 This action will send a nice deploy message in slack, including:
 
@@ -12,16 +12,12 @@ This action will send a nice deploy message in slack, including:
 ## Usage
 
 ```yml
-- uses: maael/slack-deploy-message-action
+- uses: maael/confirm-checks-action
   with:
-    slack_webhook: ${{env.SLACK_WEBHOOK}}
-    github_token: ${{env.GITHUB_PAT_TOKEN}}
+    github_token: ${{secrets.GH_PAT_TOKEN}}
     commit: '25e6c46a48a3052c27b8f35e2e3cd513193ce9a8'
-    service_status_url: https://next.staging.threads.team/api/status
-    repo: ThreadsStyling/web-app-next-template
-    slack_map_repo: maael/github-slack-mapping
-    channel: UCATYBYG1
-    environment: staging
+    repo: 'ThreadsStyling/web-app-next-template'
+    checks: 'Deploy Staging,CI Checks'
 ```
 
 
