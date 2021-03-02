@@ -44,15 +44,17 @@ function run() {
             const commit = yield getCommit();
             const octo = github.getOctokit(core.getInput('github_token'));
             const repoFull = core.getInput('repo') ||
-                `${github.context.repo.repo}/${github.context.repo.owner}`;
+                `${github.context.repo.owner}/${github.context.repo.repo}`;
             const repoParts = repoFull.split('/');
             const owner = repoParts[0];
             const repo = repoParts[1];
+            core.info(`GET /repos/${owner}/${repo}/commits/${commit}/check-runs`);
             const result = yield octo.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
                 owner,
                 repo,
                 ref: commit
             });
+            core.info(`${result.data.check_runs.length} check runs found for ${commit}`);
             const mappedResult = result.data.check_runs.map(r => ({
                 name: r.name,
                 status: r.status,
