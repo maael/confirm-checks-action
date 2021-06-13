@@ -14,10 +14,10 @@ async function run(): Promise<void> {
     const owner = repoParts[0]
     const repo = repoParts[1]
 
-    core.info(`GET /repos/${owner}/${repo}/commits/${commit}/check-runs`)
+    core.info(`GET /repos/${owner}/${repo}/commits/${commit}/check-runs?per_page=100`)
 
     const result = await octo.request(
-      'GET /repos/{owner}/{repo}/commits/{ref}/check-runs',
+      'GET /repos/{owner}/{repo}/commits/{ref}/check-runs?per_page=100',
       {
         owner,
         repo,
