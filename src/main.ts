@@ -1,6 +1,13 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
+type CheckRuns = {
+  name: string
+  status: string
+  conclusion: string
+  html_url: string
+}
+
 async function run(): Promise<void> {
   try {
     const commit = await getCommit()
@@ -14,7 +21,9 @@ async function run(): Promise<void> {
     const owner = repoParts[0]
     const repo = repoParts[1]
 
-    core.info(`GET /repos/${owner}/${repo}/commits/${commit}/check-runs?per_page=100`)
+    core.info(
+      `GET /repos/${owner}/${repo}/commits/${commit}/check-runs?per_page=100`
+    )
 
     const result = await octo.request(
       'GET /repos/{owner}/{repo}/commits/{ref}/check-runs?per_page=100',
@@ -27,7 +36,7 @@ async function run(): Promise<void> {
 
     core.info(`${result.data.check_runs.length} check runs found for ${commit}`)
 
-    const mappedResult = result.data.check_runs.map(r => ({
+    const mappedResult = result.data.check_runs.map((r: CheckRuns) => ({
       name: r.name,
       status: r.status,
       conclusion: r.conclusion,
@@ -38,7 +47,7 @@ async function run(): Promise<void> {
     const missingChecks = checks.filter(
       c =>
         !mappedResult.find(
-          ({name, status, conclusion}) =>
+          ({name, status, conclusion}: CheckRuns) =>
             name === c && status === 'completed' && conclusion === 'success'
         )
     )
